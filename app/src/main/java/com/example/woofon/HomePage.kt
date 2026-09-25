@@ -11,6 +11,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import com.example.woofon.components.DeviceCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,18 +20,19 @@ fun HomePage() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("WoofOn") },
+                title = { Text("WoofOn", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Text("Clean project")
+            DeviceCard("mypc", "8D:4L:43:L5:10")
         }
     }
 }

@@ -28,10 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.woofon.data.viewmodels.HomeViewModel
+import com.example.woofon.data.viewmodels.TagsTextField
 
 @Composable
 fun AddDeviceDialog(
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    viewModel: HomeViewModel
 ) {
     val radioOptions = listOf("7", "9")
     val selectOption = remember { mutableStateOf(radioOptions[1]) }
@@ -63,8 +67,11 @@ fun AddDeviceDialog(
                         focusedIndicatorColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.padding(horizontal = 26.dp),
-                    state = rememberTextFieldState(""),
-                    label = { Text("Device name") }
+                    label = { Text("Device name") },
+                    value = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
+                    onValueChange = { text ->
+                        viewModel.textInField(tag = TagsTextField.DEVICE, deviceName = text)
+                    }
                 )
                 TextField(
                     colors = TextFieldDefaults.colors(
@@ -76,8 +83,11 @@ fun AddDeviceDialog(
                         focusedIndicatorColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.padding(horizontal = 26.dp, vertical = 8.dp),
-                    state = rememberTextFieldState(""),
-                    label = { Text("MAC Address") }
+                    label = { Text("MAC Address") },
+                    value = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
+                    onValueChange = { text ->
+                        viewModel.textInField(tag = TagsTextField.MAC, macAddress = text)
+                    }
                 )
                 TextField(
                     colors = TextFieldDefaults.colors(
@@ -89,8 +99,11 @@ fun AddDeviceDialog(
                         focusedIndicatorColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.padding(horizontal = 26.dp),
-                    state = rememberTextFieldState(""),
-                    label = { Text("Broadcast Address") }
+                    label = { Text("Broadcast Address") },
+                    value = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
+                    onValueChange = { text ->
+                        viewModel.textInField(tag = TagsTextField.BROADCAST, broadcastAddress = text)
+                    }
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),

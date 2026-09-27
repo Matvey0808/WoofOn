@@ -1,6 +1,5 @@
 package com.example.woofon
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,10 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.example.woofon.components.AddDeviceDialog
+import com.example.woofon.data.viewmodels.HomeViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage() {
+fun HomePage(
+    viewModel: HomeViewModel = viewModel()
+) {
     val openDialog = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -53,7 +56,8 @@ fun HomePage() {
             when {
                 openDialog.value -> {
                     AddDeviceDialog(
-                        onDismissRequest = { openDialog.value = false }
+                        onDismissRequest = { openDialog.value = false },
+                        viewModel = viewModel
                     )
                 }
             }

@@ -34,12 +34,9 @@ import com.example.woofon.data.viewmodels.TagsTextField
 
 @Composable
 fun AddDeviceDialog(
-    onDismissRequest: () -> Unit,
     viewModel: HomeViewModel
 ) {
-    val radioOptions = listOf("7", "9")
-    val selectOption = remember { mutableStateOf(radioOptions[1]) }
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(onDismissRequest = { viewModel.toggleDialog() }) {
         Card(
             modifier = Modifier.size(height = 360.dp, width = 300.dp),
             colors = CardDefaults.cardColors(
@@ -102,31 +99,36 @@ fun AddDeviceDialog(
                     label = { Text("Broadcast Address") },
                     value = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
                     onValueChange = { text ->
-                        viewModel.textInField(tag = TagsTextField.BROADCAST, broadcastAddress = text)
+                        viewModel.textInField(
+                            tag = TagsTextField.BROADCAST,
+                            broadcastAddress = text
+                        )
                     }
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 26.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Port")
                     Spacer(Modifier.padding(vertical = 10.dp))
-                    radioOptions.forEach { text ->
+                    viewModel.ports.collectAsStateWithLifecycle().value.forEach { text ->
                         RadioButton(
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.surface
                             ),
-                            selected = (text == selectOption.value),
-                            onClick = {
-                                selectOption.value = text
-                            }
+                            selected = (text == viewModel.selectedPort.collectAsStateWithLifecycle().value),
+                            onClick = { viewModel.portSwitching(text) }
                         )
                         Text(text)
                     }
                 }
                 Button(
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                    onClick = { viewModel.toggleDialog() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface,

@@ -14,8 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.example.woofon.components.AddDeviceDialog
@@ -27,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun HomePage(
     viewModel: HomeViewModel = viewModel()
 ) {
-    val openDialog = remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -36,9 +34,7 @@ fun HomePage(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
                 actions = {
-                    IconButton({
-                        openDialog.value = !openDialog.value
-                    }) {
+                    IconButton({ viewModel.toggleDialog() }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add"
@@ -54,9 +50,8 @@ fun HomePage(
                 .padding(innerPadding)
         ) {
             when {
-                openDialog.value -> {
+                viewModel.isActiveDialog.collectAsState().value -> {
                     AddDeviceDialog(
-                        onDismissRequest = { openDialog.value = false },
                         viewModel = viewModel
                     )
                 }

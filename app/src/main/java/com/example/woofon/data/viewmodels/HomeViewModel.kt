@@ -32,22 +32,22 @@ class HomeViewModel : ViewModel() {
     val isError: StateFlow<List<Boolean>> = _isError.asStateFlow()
 
     fun textInField(
-        deviceName: String = "",
-        macAddress: String = "",
-        broadcastAddress: String = "",
+        deviceText: String,
+        macText: String,
+        broadcastText: String,
         tag: TagsTextField
     ) {
         when (tag) {
             TagsTextField.DEVICE -> {
-                _textDeviceName.value = deviceName
+                _textDeviceName.value = deviceText
                 _isError.value[0] = false
             }
             TagsTextField.MAC -> {
-                _textMacAddress.value = macAddress
+                _textMacAddress.value = macText
                 _isError.value[1] = false
             }
             TagsTextField.BROADCAST -> {
-                _textBroadcastAddress.value = broadcastAddress
+                _textBroadcastAddress.value = broadcastText
                 _isError.value[2] = false
             }
         }

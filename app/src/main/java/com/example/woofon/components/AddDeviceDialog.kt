@@ -55,81 +55,26 @@ fun AddDeviceDialog(
                     fontSize = 20.sp,
                     modifier = Modifier.padding(vertical = 14.dp)
                 )
-                Spacer(Modifier.padding(vertical = 10.dp))
-                TextField(
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = MaterialTheme.colorScheme.surface,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.surface
-                    ),
-                    modifier = Modifier.padding(horizontal = 26.dp),
-                    label = { Text("Device name") },
-                    trailingIcon = {
-                        if (viewModel.isError.collectAsStateWithLifecycle().value[0]) {
-                            Icon(
-                                imageVector = Icons.Default.ErrorOutline,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    value = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
-                    onValueChange = { text ->
-                        viewModel.textInField(tag = TagsTextField.DEVICE, deviceName = text)
-                    }
+                WoLField(
+                    viewModel,
+                    "Device Name",
+                    tag = TagsTextField.DEVICE,
+                    state = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
+                    error = 0
                 )
-                TextField(
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = MaterialTheme.colorScheme.surface,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.surface
-                    ),
-                    modifier = Modifier.padding(horizontal = 26.dp, vertical = 8.dp),
-                    label = { Text("MAC Address") },
-                    trailingIcon = {
-                        if (viewModel.isError.collectAsStateWithLifecycle().value[1]) {
-                            Icon(
-                                imageVector = Icons.Default.ErrorOutline,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    value = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
-                    onValueChange = { text ->
-                        viewModel.textInField(tag = TagsTextField.MAC, macAddress = text)
-                    }
+                WoLField(
+                    viewModel,
+                    "MAC Address",
+                    tag = TagsTextField.MAC,
+                    state = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
+                    error = 1
                 )
-                TextField(
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = MaterialTheme.colorScheme.surface,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.surface
-                    ),
-                    modifier = Modifier.padding(horizontal = 26.dp),
-                    label = { Text("Broadcast Address") },
-                    value = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
-                    trailingIcon = {
-                        if (viewModel.isError.collectAsStateWithLifecycle().value[2]) {
-                            Icon(
-                                imageVector = Icons.Default.ErrorOutline,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    onValueChange = { text ->
-                        viewModel.textInField(
-                            tag = TagsTextField.BROADCAST,
-                            broadcastAddress = text
-                        )
-                    }
+                WoLField(
+                    viewModel,
+                    "Broadcast Address",
+                    tag = TagsTextField.BROADCAST,
+                    state = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
+                    error = 2
                 )
                 Row(
                     modifier = Modifier

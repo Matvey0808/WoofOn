@@ -18,14 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.woofon.data.viewmodels.DeviceModel
+import com.example.woofon.data.viewmodels.HomeViewModel
 import com.example.woofon.network.sendMagicPacket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun DeviceCard(
-    title: String,
-    macAddress: String
+    deviceModel: DeviceModel,
+    viewModel: HomeViewModel
 ) {
     val scope = rememberCoroutineScope()
     Card(
@@ -35,7 +38,11 @@ fun DeviceCard(
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable(onClick = {
                 scope.launch {
-                    sendMagicPacket(mac = "D8:43:AE:65:DF:7E", "192.168.0.11", 9)
+                    sendMagicPacket(
+                        mac = deviceModel.macAddress,
+                        viewModel.textBroadcastAddress.value,
+                        viewModel.selectedPort.value.toInt()
+                    )
                 }
             }),
         colors = CardDefaults.cardColors(
@@ -49,8 +56,8 @@ fun DeviceCard(
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Text(title, fontSize = 18.sp)
-            Text(macAddress)
+            Text(deviceModel.title, fontSize = 18.sp)
+            Text(deviceModel.macAddress)
         }
     }
 }

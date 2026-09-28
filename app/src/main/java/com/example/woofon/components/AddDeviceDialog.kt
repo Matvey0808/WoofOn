@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.woofon.data.viewmodels.DeviceModel
 import com.example.woofon.data.viewmodels.HomeViewModel
 import com.example.woofon.data.viewmodels.TagsTextField
 
@@ -125,7 +126,14 @@ fun AddDeviceDialog(
                     }
                 }
                 Button(
-                    onClick = { viewModel.toggleDialog() },
+                    onClick = {
+                        viewModel.addDeviceCard(
+                            deviceModel = DeviceModel(
+                                title = viewModel.textDeviceName.value,
+                                macAddress = viewModel.textMacAddress.value,
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),

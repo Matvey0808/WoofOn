@@ -156,6 +156,8 @@ fun AddDeviceDialog(
                             deviceModel = DeviceModel(
                                 title = viewModel.textDeviceName.value,
                                 macAddress = viewModel.textMacAddress.value,
+                                broadcastAddress = viewModel.textBroadcastAddress.value,
+                                port = viewModel.selectedPort.value.toInt()
                             )
                         )
                     },

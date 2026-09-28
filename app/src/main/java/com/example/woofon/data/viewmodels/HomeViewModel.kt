@@ -93,5 +93,6 @@ class HomeViewModel : ViewModel() {
         _textDeviceName.value = ""
         _textMacAddress.value = ""
         _textBroadcastAddress.value = ""
+        _isError.value.fill(false)
     }
 }

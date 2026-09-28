@@ -40,8 +40,8 @@ fun DeviceCard(
                 scope.launch {
                     sendMagicPacket(
                         mac = deviceModel.macAddress,
-                        viewModel.textBroadcastAddress.value,
-                        viewModel.selectedPort.value.toInt()
+                        broadcast = deviceModel.broadcastAddress,
+                        port = deviceModel.port
                     )
                 }
             }),

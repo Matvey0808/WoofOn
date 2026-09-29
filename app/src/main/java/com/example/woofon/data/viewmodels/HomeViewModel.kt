@@ -1,6 +1,5 @@
 package com.example.woofon.data.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,20 +65,14 @@ class HomeViewModel : ViewModel() {
     }
 
     fun addDeviceCard(deviceModel: DeviceModel) {
-        if (_textDeviceName.value == "") {
-            _isError.value[0] = true
-        } else {
-            _isError.value[0] = false
-        }
-        if (_textMacAddress.value == "") {
-            _isError.value[1] = true
-        } else {
-            _isError.value[1] = false
-        }
-        if (_textBroadcastAddress.value == "") {
-            _isError.value[2] = true
-        } else {
-            _isError.value[2] = false
+        val _textStateList = listOf(_textDeviceName.value, _textMacAddress.value, _textBroadcastAddress.value)
+
+        for ((i, j) in _isError.value.indices.zip(_textStateList)) {
+            if (j == "") {
+                _isError.value[i] = true
+            } else {
+                _isError.value[i] = false
+            }
         }
 
         if (_isError.value.all { !it }) {

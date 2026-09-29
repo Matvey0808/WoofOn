@@ -15,20 +15,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.woofon.data.viewmodels.DeviceModel
+import com.example.woofon.data.viewmodels.models.DeviceModel
 import com.example.woofon.data.viewmodels.HomeViewModel
 import com.example.woofon.network.sendMagicPacket
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun DeviceCard(
     deviceModel: DeviceModel,
-    viewModel: HomeViewModel
 ) {
     val scope = rememberCoroutineScope()
     Card(

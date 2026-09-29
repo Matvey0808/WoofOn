@@ -1,10 +1,18 @@
 package com.example.woofon.data.viewmodels
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.woofon.data.viewmodels.models.DeviceModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 enum class TagsTextField {
     DEVICE,
@@ -12,14 +20,21 @@ enum class TagsTextField {
     BROADCAST
 }
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _textDeviceName = MutableStateFlow("")
     private val _textMacAddress = MutableStateFlow("")
     private val _textBroadcastAddress = MutableStateFlow("")
     private val _ports = MutableStateFlow(listOf("7", "9"))
     private val _selectedPort = MutableStateFlow(_ports.value[1])
     private val _isActiveDialog = MutableStateFlow(false)
-    private val _listDeviceCard = MutableStateFlow<List<DeviceModel>>(emptyList())
+    private val db = AppDatabase.getInstance(application)
+    private val dao = db.getDeviceDao()
+    val devices: StateFlow<List<DeviceModel>> = dao.getDevices()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
     private val _isError = MutableStateFlow(mutableStateListOf(false, false, false))
     val textDeviceName: StateFlow<String> = _textDeviceName.asStateFlow()
     val textMacAddress: StateFlow<String> = _textMacAddress.asStateFlow()
@@ -27,7 +42,6 @@ class HomeViewModel : ViewModel() {
     val ports: StateFlow<List<String>> = _ports.asStateFlow()
     val selectedPort: StateFlow<String> = _selectedPort.asStateFlow()
     val isActiveDialog: StateFlow<Boolean> = _isActiveDialog.asStateFlow()
-    val listDeviceCard: StateFlow<List<DeviceModel>> = _listDeviceCard.asStateFlow()
     val isError: StateFlow<List<Boolean>> = _isError.asStateFlow()
 
     fun textInField(
@@ -41,10 +55,12 @@ class HomeViewModel : ViewModel() {
                 _textDeviceName.value = deviceText
                 _isError.value[0] = false
             }
+
             TagsTextField.MAC -> {
                 _textMacAddress.value = macText
                 _isError.value[1] = false
             }
+
             TagsTextField.BROADCAST -> {
                 _textBroadcastAddress.value = broadcastText
                 _isError.value[2] = false
@@ -65,9 +81,10 @@ class HomeViewModel : ViewModel() {
     }
 
     fun addDeviceCard(deviceModel: DeviceModel) {
-        val _textStateList = listOf(_textDeviceName.value, _textMacAddress.value, _textBroadcastAddress.value)
+        val textStateList =
+            listOf(_textDeviceName.value, _textMacAddress.value, _textBroadcastAddress.value)
 
-        for ((i, j) in _isError.value.indices.zip(_textStateList)) {
+        for ((i, j) in _isError.value.indices.zip(textStateList)) {
             if (j == "") {
                 _isError.value[i] = true
             } else {
@@ -77,7 +94,9 @@ class HomeViewModel : ViewModel() {
 
         if (_isError.value.all { !it }) {
             cleanField()
-            _listDeviceCard.value += deviceModel
+            viewModelScope.launch {
+                dao.addDevice(device = deviceModel)
+            }
             _isActiveDialog.value = false
         }
     }

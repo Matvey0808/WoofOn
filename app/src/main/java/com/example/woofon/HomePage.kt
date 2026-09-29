@@ -32,7 +32,7 @@ import com.example.woofon.components.DeviceCard
 fun HomePage(
     viewModel: HomeViewModel = viewModel()
 ) {
-    val devices by viewModel.listDeviceCard.collectAsState()
+    val devices by viewModel.devices.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(

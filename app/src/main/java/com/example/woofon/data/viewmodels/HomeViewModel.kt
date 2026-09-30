@@ -1,6 +1,7 @@
 package com.example.woofon.data.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         )
     private val _isSelect = MutableStateFlow(false)
     private val _isError = MutableStateFlow(mutableStateListOf(false, false, false))
+    private val _listDevices = MutableStateFlow<List<DeviceModel>>(emptyList())
     val textDeviceName: StateFlow<String> = _textDeviceName.asStateFlow()
     val textMacAddress: StateFlow<String> = _textMacAddress.asStateFlow()
     val textBroadcastAddress: StateFlow<String> = _textBroadcastAddress.asStateFlow()
@@ -45,6 +47,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val isActiveDialog: StateFlow<Boolean> = _isActiveDialog.asStateFlow()
     val isError: StateFlow<List<Boolean>> = _isError.asStateFlow()
     val isSelect: StateFlow<Boolean> = _isSelect.asStateFlow()
+    val listDevices: StateFlow<List<DeviceModel>> = _listDevices.asStateFlow()
 
     fun textInField(
         deviceText: String,
@@ -104,13 +107,29 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun isSelectDeviceCard() {
-        _isSelect.value = !_isSelect.value
+        if (_listDevices.value.isNotEmpty()) {
+            _isSelect.value = true
+        } else {
+            _isSelect.value = false
+        }
     }
 
-    fun deleteDeviceCard(id: Int) {
+    fun deleteDeviceCard(id: List<Int>) {
         viewModelScope.launch {
             dao.deleteDevice(idDevice = id)
+            _listDevices.value = emptyList()
+            _isSelect.value = false
         }
+    }
+
+    fun addDeviceToList(device: DeviceModel) {
+        if (!_listDevices.value.contains(device)) {
+            _listDevices.value += device
+        } else {
+            _listDevices.value -= device
+        }
+        isSelectDeviceCard()
+        Log.d("LIST", "${_listDevices.value}, ${_listDevices.value.size}")
     }
 
     fun cleanField() {

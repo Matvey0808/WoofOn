@@ -1,6 +1,7 @@
 package com.example.woofon.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,40 +42,33 @@ fun DeviceCard(
             .fillMaxWidth()
             .height(80.dp)
             .padding(horizontal = 8.dp, vertical = 6.dp)
-            .clickable(onClick = {
-                scope.launch {
-                    sendMagicPacket(
-                        mac = deviceModel.macAddress,
-                        broadcast = deviceModel.broadcastAddress,
-                        port = deviceModel.port
-                    )
+            .combinedClickable(
+                onClick = {
+                    scope.launch {
+                        sendMagicPacket(
+                            mac = deviceModel.macAddress,
+                            broadcast = deviceModel.broadcastAddress,
+                            port = deviceModel.port
+                        )
+                    }
+                },
+                onLongClick = {
+                    viewModel.addDeviceToList(deviceModel)
                 }
-            }),
+            ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(6.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxHeight()
+                .padding(horizontal = 10.dp),
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(deviceModel.title, fontSize = 18.sp)
-                Text(deviceModel.macAddress)
-            }
-            IconButton({ viewModel.deleteDeviceCard(deviceModel.id) }) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                )
-            }
+            Text(deviceModel.title, fontSize = 18.sp)
+            Text(deviceModel.macAddress)
         }
     }
 }

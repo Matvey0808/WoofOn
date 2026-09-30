@@ -15,6 +15,6 @@ interface DeviceDao {
     @Insert
     suspend fun addDevice(device: DeviceModel)
 
-    @Query("DELETE FROM devices WHERE id = :idDevice")
-    suspend fun deleteDevice(idDevice: Int)
+    @Query("DELETE FROM devices WHERE id IN (:idDevice)")
+    suspend fun deleteDevice(idDevice: List<Int>)
 }

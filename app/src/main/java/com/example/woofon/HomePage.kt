@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.woofon.components.AddDeviceDialog
 import com.example.woofon.data.viewmodels.HomeViewModel
@@ -88,11 +89,15 @@ fun HomePage(
                             shrinkTowards = Alignment.Start
                         )
                     ) {
-                        IconButton({ viewModel.isSelectDeviceCard() }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = null
-                            )
+                        Row (verticalAlignment = Alignment.CenterVertically) {
+                            IconButton({ viewModel.isSelectDeviceCard() }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                            Spacer(Modifier.padding(horizontal = 8.dp))
+                            Text("${viewModel.listDevices.collectAsState().value.size}", fontSize = 20.sp)
                         }
                     }
                 },
@@ -115,7 +120,11 @@ fun HomePage(
                                     contentDescription = null
                                 )
                             }
-                            IconButton({}) {
+                            IconButton(
+                                {
+                                    viewModel.deleteDeviceCard(viewModel.listDevices.value.map { it.id })
+                                }
+                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = null
@@ -158,9 +167,6 @@ fun HomePage(
                         viewModel = viewModel
                     )
                 }
-            }
-            Button({ viewModel.isSelectDeviceCard() }) {
-                Text("View")
             }
         }
     }

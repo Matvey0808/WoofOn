@@ -35,6 +35,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+    private val _isSelect = MutableStateFlow(false)
     private val _isError = MutableStateFlow(mutableStateListOf(false, false, false))
     val textDeviceName: StateFlow<String> = _textDeviceName.asStateFlow()
     val textMacAddress: StateFlow<String> = _textMacAddress.asStateFlow()
@@ -43,6 +44,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val selectedPort: StateFlow<String> = _selectedPort.asStateFlow()
     val isActiveDialog: StateFlow<Boolean> = _isActiveDialog.asStateFlow()
     val isError: StateFlow<List<Boolean>> = _isError.asStateFlow()
+    val isSelect: StateFlow<Boolean> = _isSelect.asStateFlow()
 
     fun textInField(
         deviceText: String,
@@ -99,6 +101,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
             _isActiveDialog.value = false
         }
+    }
+
+    fun isSelectDeviceCard() {
+        _isSelect.value = !_isSelect.value
     }
 
     fun deleteDeviceCard(id: Int) {

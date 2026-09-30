@@ -79,6 +79,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun toggleDialog() {
         _isActiveDialog.value = !_isActiveDialog.value
+        _isSelect.value = false
+        _listDevices.value = emptyList()
         if (!_isActiveDialog.value) {
             cleanField()
             _selectedPort.value = _ports.value[1]
@@ -106,7 +108,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun isSelectDeviceCard() {
+    fun isSelectDeviceCard(isBack: Boolean = false) {
+        if (isBack) {
+            _listDevices.value = emptyList()
+        }
         if (_listDevices.value.isNotEmpty()) {
             _isSelect.value = true
         } else {

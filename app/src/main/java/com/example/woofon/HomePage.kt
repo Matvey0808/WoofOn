@@ -66,11 +66,11 @@ fun HomePage(
                     AnimatedVisibility(
                         visible = !viewModel.isSelect.collectAsState().value,
                         enter = expandHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             expandFrom = Alignment.Start
                         ),
                         exit = shrinkHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             shrinkTowards = Alignment.Start
                         )
                     ) {
@@ -81,16 +81,16 @@ fun HomePage(
                     AnimatedVisibility(
                         visible = viewModel.isSelect.collectAsState().value,
                         enter = expandHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             expandFrom = Alignment.Start
                         ),
                         exit = shrinkHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             shrinkTowards = Alignment.Start
                         )
                     ) {
                         Row (verticalAlignment = Alignment.CenterVertically) {
-                            IconButton({ viewModel.isSelectDeviceCard() }) {
+                            IconButton({ viewModel.isSelectDeviceCard(isBack = true) }) {
                                 Icon(
                                     imageVector = Icons.Default.ArrowBack,
                                     contentDescription = null
@@ -105,11 +105,11 @@ fun HomePage(
                     AnimatedVisibility(
                         visible = viewModel.isSelect.collectAsState().value,
                         enter = expandHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             expandFrom = Alignment.Start
                         ),
                         exit = shrinkHorizontally(
-                            animationSpec = tween(durationMillis = 400),
+                            animationSpec = tween(durationMillis = 300),
                             shrinkTowards = Alignment.Start
                         )
                     ) {

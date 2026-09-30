@@ -1,5 +1,6 @@
 package com.example.woofon.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,28 +40,36 @@ fun DeviceCard(
     viewModel: HomeViewModel
 ) {
     val scope = rememberCoroutineScope()
-    Card(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .combinedClickable(
                 onClick = {
-                    scope.launch {
-                        sendMagicPacket(
-                            mac = deviceModel.macAddress,
-                            broadcast = deviceModel.broadcastAddress,
-                            port = deviceModel.port
-                        )
+                    if (viewModel.listDevices.value.isNotEmpty()) {
+                        viewModel.addDeviceToList(deviceModel)
+                    } else {
+                        scope.launch {
+                            sendMagicPacket(
+                                mac = deviceModel.macAddress,
+                                broadcast = deviceModel.broadcastAddress,
+                                port = deviceModel.port
+                            )
+                        }
                     }
                 },
                 onLongClick = {
                     viewModel.addDeviceToList(deviceModel)
                 }
             ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
+        border = if (viewModel.listDevices.collectAsState().value.contains(deviceModel)) BorderStroke(
+            2.dp,
+            MaterialTheme.colorScheme.onPrimary
+        ) else BorderStroke(2.dp, Color.Transparent),
         shape = RoundedCornerShape(6.dp)
     ) {
         Column(

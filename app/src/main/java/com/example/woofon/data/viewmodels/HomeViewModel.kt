@@ -101,6 +101,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteDeviceCard(id: Int) {
+        viewModelScope.launch {
+            dao.deleteDevice(idDevice = id)
+        }
+    }
+
     fun cleanField() {
         _textDeviceName.value = ""
         _textMacAddress.value = ""

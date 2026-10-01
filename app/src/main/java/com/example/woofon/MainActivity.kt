@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WoofOnTheme(darkTheme = mainViewModel.isDarkTheme.collectAsStateWithLifecycle().value) {
-                HomePage()
+                SettingsPage()
             }
         }
     }

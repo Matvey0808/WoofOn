@@ -59,13 +59,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         when (tag) {
             TagsTextField.DEVICE -> {
-                _textDeviceName.value = deviceText
-                _isError.value[0] = false
+                if (deviceText.length < _textDeviceName.value.length || deviceText.length <= 24) {
+                    _textDeviceName.value = deviceText
+                    _isError.value[0] = false
+                }
             }
 
             TagsTextField.MAC -> {
-                _textMacAddress.value = macText
-                _isError.value[1] = false
+                if (macText.length < _textMacAddress.value.length || macText.length <= 12) {
+                    _textMacAddress.value = macText
+                    _isError.value[1] = false
+                }
             }
 
             TagsTextField.BROADCAST -> {

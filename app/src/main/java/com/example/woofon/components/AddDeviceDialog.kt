@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -54,21 +56,27 @@ fun AddDeviceDialog(
                     "Device Name",
                     tag = TagsTextField.DEVICE,
                     state = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
-                    error = 0
+                    error = 0,
+                    keyboardOpt = KeyboardType.Unspecified,
+                    visualTransformation = VisualTransformation.None
                 )
                 WoLField(
                     viewModel,
                     "MAC Address",
                     tag = TagsTextField.MAC,
                     state = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
-                    error = 1
+                    error = 1,
+                    keyboardOpt = KeyboardType.Unspecified,
+                    visualTransformation = MacVisualTransformation()
                 )
                 WoLField(
                     viewModel,
                     "Broadcast Address",
                     tag = TagsTextField.BROADCAST,
                     state = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
-                    error = 2
+                    error = 2,
+                    keyboardOpt = KeyboardType.Number,
+                    visualTransformation = VisualTransformation.None
                 )
                 Row(
                     modifier = Modifier

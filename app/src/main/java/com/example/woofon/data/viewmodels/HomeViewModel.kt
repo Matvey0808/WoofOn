@@ -28,6 +28,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _ports = MutableStateFlow(listOf("7", "9"))
     private val _selectedPort = MutableStateFlow(_ports.value[1])
     private val _isActiveDialog = MutableStateFlow(false)
+    private val _editingDevice = MutableStateFlow<DeviceModel?>(null)
     private val db = AppDatabase.getInstance(application)
     private val dao = db.getDeviceDao()
     val devices: StateFlow<List<DeviceModel>> = dao.getDevices()
@@ -45,6 +46,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val ports: StateFlow<List<String>> = _ports.asStateFlow()
     val selectedPort: StateFlow<String> = _selectedPort.asStateFlow()
     val isActiveDialog: StateFlow<Boolean> = _isActiveDialog.asStateFlow()
+    val editingDevice: StateFlow<DeviceModel?> = _editingDevice.asStateFlow()
     val isError: StateFlow<List<Boolean>> = _isError.asStateFlow()
     val isSelect: StateFlow<Boolean> = _isSelect.asStateFlow()
     val listDevices: StateFlow<List<DeviceModel>> = _listDevices.asStateFlow()
@@ -80,14 +82,21 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun toggleDialog() {
         _isActiveDialog.value = !_isActiveDialog.value
         _isSelect.value = false
-        _listDevices.value = emptyList()
-        if (!_isActiveDialog.value) {
-            cleanField()
-            _selectedPort.value = _ports.value[1]
-        }
+        _editingDevice.value = null
+        cleanField()
+        _selectedPort.value = _ports.value[1]
     }
 
-    fun addDeviceCard(deviceModel: DeviceModel) {
+    fun editDeviceCard(deviceModel: DeviceModel) {
+        _editingDevice.value = deviceModel
+        _textDeviceName.value = deviceModel.title
+        _textMacAddress.value = deviceModel.macAddress
+        _textBroadcastAddress.value = deviceModel.broadcastAddress
+        _selectedPort.value = deviceModel.port.toString()
+        _isActiveDialog.value = true
+    }
+
+    fun saveDeviceCard() {
         val textStateList =
             listOf(_textDeviceName.value, _textMacAddress.value, _textBroadcastAddress.value)
 
@@ -100,11 +109,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         if (_isError.value.all { !it }) {
-            cleanField()
+            val editingDevice = _editingDevice.value
+            val deviceModel = DeviceModel(
+                id = editingDevice?.id ?: 0,
+                title = _textDeviceName.value,
+                macAddress = _textMacAddress.value,
+                broadcastAddress = _textBroadcastAddress.value,
+                port = _selectedPort.value.toInt()
+            )
             viewModelScope.launch {
-                dao.addDevice(device = deviceModel)
+                if (editingDevice == null) {
+                    dao.addDevice(device = deviceModel)
+                } else {
+                    dao.updateDevice(device = deviceModel)
+                }
             }
             _isActiveDialog.value = false
+            _editingDevice.value = null
+            cleanField()
+            _selectedPort.value = _ports.value[1]
         }
     }
 

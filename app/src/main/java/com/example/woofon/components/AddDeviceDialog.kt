@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.woofon.data.viewmodels.models.DeviceModel
 import com.example.woofon.data.viewmodels.HomeViewModel
 import com.example.woofon.data.viewmodels.TagsTextField
 
@@ -32,6 +31,7 @@ import com.example.woofon.data.viewmodels.TagsTextField
 fun AddDeviceDialog(
     viewModel: HomeViewModel
 ) {
+    val isEditing = viewModel.editingDevice.collectAsStateWithLifecycle().value != null
     Dialog(onDismissRequest = { viewModel.toggleDialog() }) {
         Card(
             modifier = Modifier.size(height = 360.dp, width = 300.dp),
@@ -44,7 +44,7 @@ fun AddDeviceDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Add Device",
+                    if (isEditing) "Edit Device" else "Add Device",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(vertical = 14.dp)
@@ -90,16 +90,7 @@ fun AddDeviceDialog(
                     }
                 }
                 Button(
-                    onClick = {
-                        viewModel.addDeviceCard(
-                            deviceModel = DeviceModel(
-                                title = viewModel.textDeviceName.value,
-                                macAddress = viewModel.textMacAddress.value,
-                                broadcastAddress = viewModel.textBroadcastAddress.value,
-                                port = viewModel.selectedPort.value.toInt()
-                            )
-                        )
-                    },
+                    onClick = { viewModel.saveDeviceCard() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
@@ -109,7 +100,7 @@ fun AddDeviceDialog(
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                    Text("Add")
+                    Text(if (isEditing) "Save" else "Add")
                 }
             }
         }

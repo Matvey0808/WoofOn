@@ -114,10 +114,15 @@ fun HomePage(
                         )
                     ) {
                         Row {
-                            IconButton({}) {
+                            IconButton(
+                                onClick = {
+                                    viewModel.listDevices.value.singleOrNull()?.let(viewModel::editDeviceCard)
+                                },
+                                enabled = viewModel.listDevices.collectAsState().value.size == 1
+                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
-                                    contentDescription = null
+                                    contentDescription = "Edit"
                                 )
                             }
                             IconButton(

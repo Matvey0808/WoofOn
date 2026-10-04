@@ -88,9 +88,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _isSelect.value = false
         _editingDevice.value = null
         cleanField()
+        _listDevices.value = emptyList()
         _selectedPort.value = _ports.value[1]
     }
-
     fun editDeviceCard(deviceModel: DeviceModel) {
         _editingDevice.value = deviceModel
         _textDeviceName.value = deviceModel.title

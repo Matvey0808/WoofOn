@@ -29,11 +29,46 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.woofon.data.viewmodels.HomeViewModel
 import com.example.woofon.data.viewmodels.TagsTextField
 
+private data class WoLFieldData(
+    val label: String,
+    val tag: TagsTextField,
+    val state: String,
+    val error: Int,
+    val keyboardOpt: KeyboardType,
+    val visualTransformation: VisualTransformation
+)
+
 @Composable
 fun AddDeviceDialog(
     viewModel: HomeViewModel
 ) {
     val isEditing = viewModel.editingDevice.collectAsStateWithLifecycle().value != null
+    val fields = listOf(
+        WoLFieldData(
+            label = "Device Name",
+            tag = TagsTextField.DEVICE,
+            state = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
+            error = 0,
+            keyboardOpt = KeyboardType.Unspecified,
+            visualTransformation = VisualTransformation.None
+        ),
+        WoLFieldData(
+            label = "MAC Address",
+            tag = TagsTextField.MAC,
+            state = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
+            error = 1,
+            keyboardOpt = KeyboardType.Unspecified,
+            visualTransformation = MacVisualTransformation()
+        ),
+        WoLFieldData(
+            label = "Broadcast Address",
+            tag = TagsTextField.BROADCAST,
+            state = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
+            error = 2,
+            keyboardOpt = KeyboardType.Number,
+            visualTransformation = VisualTransformation.None
+        )
+    )
     Dialog(onDismissRequest = { viewModel.toggleDialog() }) {
         Card(
             modifier = Modifier.size(height = 360.dp, width = 300.dp),
@@ -51,33 +86,17 @@ fun AddDeviceDialog(
                     fontSize = 20.sp,
                     modifier = Modifier.padding(vertical = 14.dp)
                 )
-                WoLField(
-                    viewModel,
-                    "Device Name",
-                    tag = TagsTextField.DEVICE,
-                    state = viewModel.textDeviceName.collectAsStateWithLifecycle().value,
-                    error = 0,
-                    keyboardOpt = KeyboardType.Unspecified,
-                    visualTransformation = VisualTransformation.None
-                )
-                WoLField(
-                    viewModel,
-                    "MAC Address",
-                    tag = TagsTextField.MAC,
-                    state = viewModel.textMacAddress.collectAsStateWithLifecycle().value,
-                    error = 1,
-                    keyboardOpt = KeyboardType.Unspecified,
-                    visualTransformation = MacVisualTransformation()
-                )
-                WoLField(
-                    viewModel,
-                    "Broadcast Address",
-                    tag = TagsTextField.BROADCAST,
-                    state = viewModel.textBroadcastAddress.collectAsStateWithLifecycle().value,
-                    error = 2,
-                    keyboardOpt = KeyboardType.Number,
-                    visualTransformation = VisualTransformation.None
-                )
+                fields.forEach { field ->
+                    WoLField(
+                        viewModel,
+                        field.label,
+                        tag = field.tag,
+                        state = field.state,
+                        error = field.error,
+                        keyboardOpt = field.keyboardOpt,
+                        visualTransformation = field.visualTransformation
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
